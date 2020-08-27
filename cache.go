@@ -162,10 +162,13 @@ func (c *Cache) Put(key string, data []byte) {
 	}
 
 	c.mx.Lock()
+	c.expMx.Lock()
 	c.storage[key] = &item{
 		data: data,
 		lu:   time.Now(),
 	}
+	delete(c.expired, key)
+	c.expMx.Unlock()
 	c.mx.Unlock()
 
 	n := atomic.AddInt64(&c.size, int64(len(data)))
@@ -180,11 +183,14 @@ func (c *Cache) PutWithTTL(key string, data []byte, ttl time.Duration) {
 	}
 
 	c.mx.Lock()
+	c.expMx.Lock()
 	c.storage[key] = &item{
 		data: data,
 		ttl:  time.Now().Add(ttl),
 		lu:   time.Now(),
 	}
+	delete(c.expired, key)
+	c.expMx.Unlock()
 	c.mx.Unlock()
 
 	n := atomic.AddInt64(&c.size, int64(len(data)))

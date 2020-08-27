@@ -169,11 +169,16 @@ func TestCache_Put_over_size(t *testing.T) {
 func TestCache_Put(t *testing.T) {
 	c := New(context.Background())
 
+	c.expired["foo"] = struct{}{}
+
 	c.Put("foo", []byte{0x10})
 
 	i, ok := c.storage["foo"]
 	assert.True(t, ok)
 	assert.Equal(t, []byte{0x10}, i.data)
+
+	_, ok = c.expired["foo"]
+	assert.False(t, ok)
 }
 
 func TestCache_PutWithTTL_over_size(t *testing.T) {
@@ -189,12 +194,17 @@ func TestCache_PutWithTTL_over_size(t *testing.T) {
 func TestCache_PutWithTTL(t *testing.T) {
 	c := New(context.Background())
 
+	c.expired["foo"] = struct{}{}
+
 	c.PutWithTTL("foo", []byte{0x10}, time.Second)
 
 	i, ok := c.storage["foo"]
 	assert.True(t, ok)
 	assert.Equal(t, []byte{0x10}, i.data)
 	assert.InDelta(t, time.Now().Add(time.Second).Unix(), i.ttl.Unix(), 1)
+
+	_, ok = c.expired["foo"]
+	assert.False(t, ok)
 }
 
 func TestCache_GetOrNewWithTTL_exists(t *testing.T) {
