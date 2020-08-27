@@ -1,3 +1,5 @@
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/negasus/cache) [![Go Report Card](https://goreportcard.com/badge/github.com/negasus/cache)](https://goreportcard.com/report/github.com/balerter/balerter) ![Test](https://github.com/balerter/balerter/workflows/Test/badge.svg) [![codecov](https://codecov.io/gh/negasus/cache/branch/master/graph/badge.svg)](https://codecov.io/gh/negasus/cache) 
+
 # Bytes Cache with TTL and MaxSize option
 
 ## Install
